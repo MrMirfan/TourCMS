@@ -1,0 +1,14 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    Layout = "RootTemplate.cshtml";
+}
+
+<div class="flex justify-center pt-24">
+    <iframe class="w-10/12 h-dvh rounded-3xl outline outline-offset-4 outline-2" src="https://www.youtube.com/embed/a77gU4T4kQo?si=SISeIiYWg1221NiK&autoplay=1&playlist=a77gU4T4kQo&loop=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div>
+
+<div>
+    @Model.Value("bodyText")
+</div>
+

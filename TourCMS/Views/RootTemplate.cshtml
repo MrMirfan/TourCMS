@@ -1,0 +1,60 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+	Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+		<title>@Model.Name</title>
+
+		@* StyleSheets *@
+		<link 
+			href="/css/tailwindcss/output.css"
+			rel="stylesheet"
+			fetchpriority="high"
+		>
+		<link 
+			href="/css/animatecss/animate.min.css"
+			rel="stylesheet"
+			fetchpriority="auto"
+		>
+
+
+		@* Scripts *@
+		<script src="/scripts/htmx/htmx.min.js"></script>
+					
+		@RenderSection("Head", false)
+
+	</head>
+
+	<body class="font-['Arial']">
+
+		<partial name="Layout/Headers/_Header" />
+
+
+		<main>
+			@RenderBody()
+		</main>
+
+		<partial name="Layout/Footers/_Footer" />
+		
+	</body>
+
+</html>
+
+@* Retrieve all Properties *@
+@* @{
+	foreach (var prop in Model.Properties)
+	{
+		<p>
+			@prop.PropertyType =  @prop.GetValue()
+		</p>
+	}
+} *@
+
+@Html.RenderProfiler()

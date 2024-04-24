@@ -1,0 +1,24 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+	Layout = "DestinationManagerTemplate.cshtml";
+}
+
+<div class="m-10 gap-2 divide-x-4 divide-black divide-dashed md:flex">
+	@* DestinationSummary *@
+	<div class="basis-9/12 px-5">
+		@Model.Value("DestinationSummary")
+	</div>
+
+	@* DestinationGallery *@
+	<div class="flex flex-column flex-wrap gap-2 basis-3/12">
+		@{
+			foreach (var HotelImage in Model.Value<System.Collections.Generic.List<Umbraco.Cms.Core.Models.MediaWithCrops>>("DestinationGallery"))
+			{
+				<div class="pl-2">
+					<img src="@HotelImage.Url()" class="rounded-lg" />
+				</div>
+			}
+		}
+	</div>
+</div>

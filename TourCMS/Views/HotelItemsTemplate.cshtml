@@ -1,0 +1,203 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    Layout = "RootTemplate.cshtml";
+}
+
+@section Head {
+    <link href="/css/flowbite/flowbite.min.css"
+          rel="stylesheet"
+          fetchpriority="auto">
+
+    <link href="~/css/swiper/swiper-bundle.min.css"
+          rel="stylesheet" />
+
+    <script src="~/scripts/swiper/swiper-bundle.min.js"></script>
+
+    <script src="/scripts/flowbite/flowbite.min.js"></script>
+}
+
+
+@* HotelOverviewTab *@
+<div class="pt-24 pb-3 flex flex-col gap-y-5 mx-3 md:mx-20">
+
+    <div>
+        @Model.Value("HotelSummary")
+    </div>
+
+    <div>
+        <div id="default-carousel" class="relative w-full" data-carousel="slide">
+
+            <!-- Carousel wrapper -->
+            <div class="relative h-lvh rounded-2xl overflow-hidden">
+
+                @foreach (var item in Model.Value<System.Collections.Generic.List<Umbraco.Cms.Core.Models.MediaWithCrops>>("HotelCarousel"))
+                {
+                    <div class="hidden duration-700 ease-in-out" data-carousel-item>
+                        <img src="@item.Url()" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
+                    </div>
+                }
+            </div>
+
+            <!-- Slider controls -->
+            <button type="button" class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
+                <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                    <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4" />
+                    </svg>
+                    <span class="sr-only">Previous</span>
+                </span>
+            </button>
+
+            <button type="button" class="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-next>
+                <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                    <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
+                    </svg>
+                    <span class="sr-only">Next</span>
+                </span>
+            </button>
+
+        </div>
+    </div>
+</div>
+
+
+@* HotelAccomodationTab *@
+<div class="p-3 bg-gradient-to-b from-amber-200 to-amber-100">
+
+    <div class="md:mx-20 mx-3 md:my-10">
+        @Model.Value("HotelAccommodationSummary")
+    </div>
+
+    @{
+        var rooms = Model.Value<Umbraco.Cms.Core.Models.Blocks.BlockListModel>("HotelRooms").ToList();
+        var HotelRoomsElement = new List<string>();
+        var roomHtml = "";
+
+        foreach (var room in rooms)
+        {
+            var HotelRoomImage = room.Content.Value<Umbraco.Cms.Core.Models.MediaWithCrops>("HotelRoomImage").Url();
+            var HotelRoomTitle = room.Content.Value("HotelRoomTitle");
+            var HotelRoomFeatures = room.Content.Value<string[]>("HotelRoomFeatures");
+
+            roomHtml = $@"
+                <div class='w-11/12 border-2 border-gray-300 rounded-t-2xl'>
+                <img src='{HotelRoomImage}' alt='Room Image' class='w-full h-64 rounded-t-2xl'>
+                <div class='my-5 text-center'>
+                <h3 class='underline underline-offset-8 my-3'>{HotelRoomTitle}</h3>
+                <ul>
+                ";
+                        foreach (var feature in HotelRoomFeatures)
+                        {
+                            roomHtml += $"<li> <span class='font-extrabold'>-</span> {feature}</li>\n";
+                        }
+
+                        roomHtml += @"
+                </ul>
+                </div>
+                </div>
+                ";
+
+            HotelRoomsElement.Add(roomHtml);
+        }
+
+        ViewData["SliderElement"] = HotelRoomsElement;
+
+    }
+
+    <div class="mx-3 my-5 md:mx-20">
+        <partial name="Misc/Sliders/_Slider" view-data="ViewData" />
+    </div>
+
+</div>
+
+@* HotelFacilitiesTab *@
+<div class="p-3 bg-slate-200">
+    <div>
+        
+    </div>
+    <div class="m-3 md:m-20">
+       
+        <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
+            <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-styled-tab" data-tabs-toggle="#default-styled-tab-content" data-tabs-active-classes="text-purple-600 hover:text-purple-600 dark:text-purple-500 dark:hover:text-purple-500 border-purple-600 dark:border-purple-500" data-tabs-inactive-classes="dark:border-transparent text-gray-500 hover:text-gray-600 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300" role="tablist">
+
+                @{
+                    var HotelFacilitiesForTitle = Model.Value<Umbraco.Cms.Core.Models.Blocks.BlockListModel>("HotelFacilities").ToList();
+                    var TitleTabCount = 1;
+
+                    foreach (var HotelFacility in HotelFacilitiesForTitle)
+                    {
+
+                        <li class="me-2" role="presentation">
+                            <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="tab@(TitleTabCount)" data-tabs-target="#contenttab@(TitleTabCount)" type="button" role="tab" aria-controls="dashboard" aria-selected="false">@HotelFacility.Content.Value("HotelFacilitiesTitle")</button>
+                        </li>
+                        TitleTabCount++;
+                    }
+                }
+
+            </ul>
+        </div>
+
+        <div class="m-3 md:m-5" id="default-styled-tab-content">
+           
+            @{
+
+                var HotelFacilitiesForContent = Model.Value<Umbraco.Cms.Core.Models.Blocks.BlockListModel>("HotelFacilities").ToList();
+                var ContentTabCount = 1;
+
+                foreach (var HotelFacilitiesContents in HotelFacilitiesForContent)
+                {
+                    var HotelFacilitiesContentsList = HotelFacilitiesContents.Content.Value<Umbraco.Cms.Core.Models.Blocks.BlockListModel>("HotelFacilitiesContents").ToList();
+
+                    <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="contenttab@(ContentTabCount)" role="tabpanel" aria-labelledby="profile-tab">
+
+
+                        <div id="controls-carousel" class="relative w-full" data-carousel="static">
+                            
+                            <!-- Carousel wrapper -->
+                            <div class="relative h-56 overflow-hidden rounded-lg md:h-96">
+
+                                @foreach (var HotelFacilityContent in HotelFacilitiesContentsList)
+                                {
+                                    var TabImage = HotelFacilityContent.Content.Value<Umbraco.Cms.Core.Models.MediaWithCrops>("HotelFacilitiesImage").Url();
+                                    <div class="hidden duration-700 ease-in-out flex gap-3" data-carousel-item>
+                                        <img src="@TabImage" class="w-1/2" />
+                                        <div class="p-5 md:p-20 w-1/2 bg-zinc-300">
+                                            @HotelFacilityContent.Content.Value("HotelFacilitiesDescription")
+                                        </div>
+                                    </div>
+                                }
+
+                            </div>
+                            
+                            <!-- Slider controls -->
+                            <button type="button" class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
+                                <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                                    <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4" />
+                                    </svg>
+                                    <span class="sr-only">Previous</span>
+                                </span>
+                            </button>
+                            <button type="button" class="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-next>
+                                <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                                    <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
+                                    </svg>
+                                    <span class="sr-only">Next</span>
+                                </span>
+                            </button>
+
+                        </div>
+
+                    </div>
+                    ContentTabCount++;
+                }
+
+            }
+            
+        </div>
+
+    </div>
+</div>

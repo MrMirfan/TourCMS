@@ -1,0 +1,39 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+	Layout = "DestinationManagerTemplate.cshtml";
+}
+
+
+@{
+	var selection = Umbraco.Content(Model.Id)
+    .ChildrenOfType("hotelItemsDT")
+    .Where(x => x.IsVisible())
+    .OrderBy(x => x.UpdateDate);
+}
+
+<div class="mx-10 grid grid-cols-1 gap-3 md:grid-cols-2">
+	@foreach (var item in selection)
+	{
+
+		var bgimage = "#";
+		if (item.Value<Umbraco.Cms.Core.Models.MediaWithCrops>("hotelImage") != null)
+		{
+			bgimage = item.Value<Umbraco.Cms.Core.Models.MediaWithCrops>("hotelImage").Url();
+		}
+
+		<a href="@item.Url()" class="relative flex flex-col border-2 border-gray-300">
+			<div class="bg-cover relative">
+				<div class="absolute m-2 px-2 py-1 rounded-md bg-white">
+					@item.Value("HotelTravelType")
+				</div>
+				<img src="@bgimage" class="object-cover w-full min-h-52 max-h-72" />
+			</div>
+			<div class="relative bottom-0 -mt-10 p-3 w-10/12 bg-white ">
+				<h2 class="m-3 text-xl">@item.Name</h2>
+				<h3 class="m-3 text-sm">@item.Value("HotelDescription")</h3>
+			</div>
+		</a>
+	}
+</div>
+

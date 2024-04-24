@@ -1,0 +1,12 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+
+<div class="flex justify-center">
+    <div class="relative bottom-20 bg-white p-5 inline-grid grid-flow-col auto-cols-max divide-x-8 divide-black divide-dashed font-bold tracking-widest">
+        @foreach (var item in (System.Collections.Generic.IEnumerable<IPublishedContent>)ViewData["selection"])
+        {
+            <div>
+                <a href="@item.Url()" class="p-5 hover:underline hover:decoration-4 hover:decoration-dashed @(item.IsAncestorOrSelf(Model) ? "underline decoration-4 decoration-dotted" : null) ">@item.Name()</a>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,39 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+	Layout = "RootTemplate.cshtml";
+}
+
+@{
+	var parent = Model.Parent.Id;
+	if(Model.IsDocumentType("destinationItemsDT"))
+	{
+		parent = Model.Id;	
+	}
+
+	var selection = Umbraco.Content(parent)
+    .Children()
+    .Where(x => x.IsVisible())
+    .OrderBy(x => x.Name);
+
+    ViewData["selection"] = selection;
+
+}
+
+@{
+
+    var bgimage = "#";
+    if (Model.Value<Umbraco.Cms.Core.Models.MediaWithCrops>("destinationHeroImage") != null)
+    {
+        bgimage = Model.Value<Umbraco.Cms.Core.Models.MediaWithCrops>("destinationHeroImage").Url();
+    }
+}
+
+@* DestinationHeroHeader *@
+<div class="pt-24 bg-fixed bg-center bg-cover bg-no-repeat h-dvh" style="background-image:url(@bgimage);">
+
+</div>
+
+<partial name="Misc/Navigations/InPageNavigation" view-data="ViewData" />
+
+@RenderBody()
